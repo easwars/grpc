@@ -23,8 +23,8 @@ logger = logging.getLogger(__name__)
 flags.adopt_module_key_flags(xds_k8s_testcase)
 
 # Test specific flags.
-  # TODO: performs some validation of `td_bootstrap_images` cannot be empty.
-  # https://abseil.io/docs/python/guides/flags#flags-validators
+# TODO: performs some validation of `td_bootstrap_images` cannot be empty.
+# https://abseil.io/docs/python/guides/flags#flags-validators
 TD_BOOTSTRAP_IMAGES = flags.DEFINE_list(
     'td_bootstrap_images',
     default=None,
@@ -33,6 +33,7 @@ TD_BOOTSTRAP_IMAGES = flags.DEFINE_list(
 # Type aliases
 _XdsTestServer = xds_k8s_testcase.XdsTestServer
 _XdsTestClient = xds_k8s_testcase.XdsTestClient
+
 
 class BootstrapGeneratorTest(xds_k8s_testcase.RegularXdsKubernetesTestCase):
     #TODO: implement this to ensure that this is run
@@ -79,14 +80,16 @@ class BootstrapGeneratorTest(xds_k8s_testcase.RegularXdsKubernetesTestCase):
             with self.subTest('7_start_test_client_%s' % bootstrap_image):
                 test_client: _XdsTestClient = self.startTestClient(test_server)
 
-            with self.subTest('8_test_client_xds_config_exists_%s' % bootstrap_image):
+            with self.subTest('8_test_client_xds_config_exists_%s' %
+                              bootstrap_image):
                 self.assertXdsConfigExists(test_client)
 
-            with self.subTest('9_test_server_received_rpcs_from_test_client_%s' % bootstrap_image):
+            with self.subTest(
+                    '9_test_server_received_rpcs_from_test_client_%s' %
+                    bootstrap_image):
                 self.assertSuccessfulRpcs(test_client)
                 self.client_runner.cleanup(force=self.force_cleanup)
 
 
 if __name__ == '__main__':
     absltest.main(failfast=True)
-
