@@ -22,6 +22,7 @@ from typing import List, Optional, Tuple
 
 from absl import flags
 from absl.testing import absltest
+from absl.testing import parameterized
 from google.protobuf import json_format
 import grpc
 
@@ -65,7 +66,7 @@ ClientConfig = framework.rpc.grpc_csds.ClientConfig
 _TD_CONFIG_MAX_WAIT_SEC = 600
 
 
-class XdsKubernetesTestCase(absltest.TestCase, metaclass=abc.ABCMeta):
+class XdsKubernetesTestCase(parameterized.TestCase):
     _resource_suffix_randomize: bool = True
     client_namespace: str
     client_runner: KubernetesClientRunner
