@@ -34,6 +34,7 @@ XdsTestClient = xds_k8s_testcase.XdsTestClient
 KubernetesServerRunner = server_app.KubernetesServerRunner
 KubernetesClientRunner = client_app.KubernetesClientRunner
 
+
 class BootstrapGeneratorClientTest(xds_k8s_testcase.XdsKubernetesTestCase):
     """Client-side bootstrap generator tests."""
     test_server: XdsTestServer
@@ -44,7 +45,6 @@ class BootstrapGeneratorClientTest(xds_k8s_testcase.XdsKubernetesTestCase):
     def isSupported(config: skips.TestConfig) -> bool:
         return True
 
-
     @classmethod
     def setUpClass(cls):
         """Hook method for setting up class fixture before running tests in
@@ -54,7 +54,6 @@ class BootstrapGeneratorClientTest(xds_k8s_testcase.XdsKubernetesTestCase):
         if cls.server_maintenance_port is None:
             cls.server_maintenance_port = \
                 KubernetesServerRunner.DEFAULT_MAINTENANCE_PORT
-
 
     def setUp(self):
         """Hook method for setting up the test fixture before exercising it."""
@@ -67,7 +66,6 @@ class BootstrapGeneratorClientTest(xds_k8s_testcase.XdsKubernetesTestCase):
         self.test_server = self.startTestServer()
         self.setupServerBackends()
 
-
     def initTrafficDirectorManager(self) -> TrafficDirectorManager:
         return TrafficDirectorManager(
             self.gcp_api_manager,
@@ -76,7 +74,6 @@ class BootstrapGeneratorClientTest(xds_k8s_testcase.XdsKubernetesTestCase):
             resource_suffix=self.resource_suffix,
             network=self.network,
             compute_api_version=self.compute_api_version)
-
 
     def initKubernetesServerRunner(self) -> KubernetesServerRunner:
         return KubernetesServerRunner(
@@ -93,8 +90,9 @@ class BootstrapGeneratorClientTest(xds_k8s_testcase.XdsKubernetesTestCase):
             debug_use_port_forwarding=self.debug_use_port_forwarding,
             enable_workload_identity=self.enable_workload_identity)
 
-
-    def initKubernetesClientRunner(self, td_bootstrap_image=None) -> KubernetesClientRunner:
+    def initKubernetesClientRunner(self,
+                                   td_bootstrap_image=None
+                                  ) -> KubernetesClientRunner:
         if td_bootstrap_image == None:
             td_bootstrap_image = self.td_bootstrap_image
         return KubernetesClientRunner(
@@ -113,11 +111,10 @@ class BootstrapGeneratorClientTest(xds_k8s_testcase.XdsKubernetesTestCase):
             stats_port=self.client_port,
             reuse_namespace=self.server_namespace == self.client_namespace)
 
-
     def startTestServer(self,
-                         replica_count=1,
-                         server_runner=None,
-                         **kwargs) -> XdsTestServer:
+                        replica_count=1,
+                        server_runner=None,
+                        **kwargs) -> XdsTestServer:
         if server_runner is None:
             server_runner = self.server_runner
         test_server = server_runner.run(
@@ -128,7 +125,6 @@ class BootstrapGeneratorClientTest(xds_k8s_testcase.XdsKubernetesTestCase):
         test_server.set_xds_address(self.server_xds_host, self.server_xds_port)
         return test_server
 
-
     def startTestClient(self, test_server: XdsTestServer,
                         **kwargs) -> XdsTestClient:
         test_client = self.client_runner.run(server_target=test_server.xds_uri,
@@ -136,15 +132,17 @@ class BootstrapGeneratorClientTest(xds_k8s_testcase.XdsKubernetesTestCase):
         test_client.wait_for_active_server_channel()
         return test_client
 
-
-    @parameterized.named_parameters(
-        ('Version v0.14.0', 'v0.14.0', 'gcr.io/grpc-testing/td-grpc-bootstrap:d6baaf7b0e0c63054ac4d9bedc09021ff261d599'))
+    @parameterized.named_parameters((
+        'Version v0.14.0', 'v0.14.0',
+        'gcr.io/grpc-testing/td-grpc-bootstrap:d6baaf7b0e0c63054ac4d9bedc09021ff261d599'
+    ))
     def test_baseline_across_bootstrap_versions(self, version, image):
         """Runs the baseline test for multiple versions of the bootstrap
         generator on the client. Server uses the version of the bootstrap
         generator as configured via the --td_bootstrap_image flag.
         """
-        self.client_runner = self.initKubernetesClientRunner(td_bootstrap_image=image)
+        self.client_runner = self.initKubernetesClientRunner(
+            td_bootstrap_image=image)
         test_client: XdsTestClient = self.startTestClient(test_server)
         self.assertXdsConfigExists(test_client)
         self.assertSuccessfulRpcs(test_client)
@@ -153,4 +151,3 @@ class BootstrapGeneratorClientTest(xds_k8s_testcase.XdsKubernetesTestCase):
 
 if __name__ == '__main__':
     absltest.main(failfast=True)
-
