@@ -13,6 +13,7 @@
 # limitations under the License.
 import datetime
 import logging
+from typing import Optional
 
 from absl import flags
 from absl.testing import absltest
@@ -25,7 +26,6 @@ from framework.infrastructure import k8s
 from framework.infrastructure import traffic_director
 from framework.test_app import client_app
 from framework.test_app import server_app
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 flags.adopt_module_key_flags(xds_k8s_testcase)
@@ -109,10 +109,10 @@ class _BootstrapGeneratorBaseTest(xds_k8s_testcase.XdsKubernetesBaseTestCase):
             compute_api_version=cls.compute_api_version)
 
     @classmethod
-    def initKubernetesServerRunner(cls,
-                                   *,
-                                   td_bootstrap_image: Optional[str] = None
-                                   ) -> KubernetesServerRunner:
+    def initKubernetesServerRunner(
+            cls,
+            *,
+            td_bootstrap_image: Optional[str] = None) -> KubernetesServerRunner:
         if not td_bootstrap_image:
             td_bootstrap_image = cls.td_bootstrap_image
         return KubernetesServerRunner(
