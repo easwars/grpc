@@ -108,10 +108,10 @@ class _BootstrapGeneratorBaseTest(xds_k8s_testcase.XdsKubernetesBaseTestCase):
             compute_api_version=cls.compute_api_version)
 
     @classmethod
-    def initKubernetesServerRunner(cls,
-                                   *,
-                                   td_bootstrap_image: Optional[str] = None
-                                   ) -> KubernetesServerRunner:
+    def initKubernetesServerRunner(
+            cls,
+            *,
+            td_bootstrap_image: Optional[str] = None) -> KubernetesServerRunner:
         if not td_bootstrap_image:
             td_bootstrap_image = cls.td_bootstrap_image
         return KubernetesServerRunner(
