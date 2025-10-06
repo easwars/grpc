@@ -401,7 +401,6 @@ def checkout_grpc_stack(lang, release):
     return stack_base
 
 
-
 # Trial
 #
 
