@@ -401,6 +401,10 @@ def checkout_grpc_stack(lang, release):
     return stack_base
 
 
+
+# Trial
+#
+
 languages = args.language if args.language != ["all"] else _LANGUAGES
 for lang in languages:
     docker_images = build_all_images_for_lang(lang)
